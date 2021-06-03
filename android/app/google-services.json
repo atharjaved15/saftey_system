@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854345665596",
+    "project_id": "safetysystem-17318",
+    "storage_bucket": "safetysystem-17318.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854345665596:android:fe272f9b8d574e459e8739",
+        "android_client_info": {
+          "package_name": "com.developer.saftey_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854345665596-7o5pi8206jlhjlm0arbk0ecmoh4f2v5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEwq9UF3EU-s-oIFpNexxsLdC7BLplCyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854345665596-7o5pi8206jlhjlm0arbk0ecmoh4f2v5v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
