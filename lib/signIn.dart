@@ -51,6 +51,7 @@ class signIn extends StatelessWidget {
                     Text('Login' , style: TextStyle(fontSize: 22, fontWeight:FontWeight.bold),),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         fillColor: Colors.grey[100],
                         hintText: 'UserName',
@@ -61,6 +62,7 @@ class signIn extends StatelessWidget {
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
                     TextField(
+                      controller: passController,
                       decoration: InputDecoration(
                         fillColor: Colors.grey[100],
                         hintText: 'Password',
@@ -74,9 +76,9 @@ class signIn extends StatelessWidget {
                     SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                     MaterialButton(
                       onPressed: () async{
-                        var doc = await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
                         await getValues();
                         await login();
+                        var doc = await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
                         Navigator.push(context, MaterialPageRoute(builder: (context) => homeScreen(phoneNumber1: doc['E_Number1'], phoneNumber2: doc['E_Number2'])));
                         Fluttertoast.showToast(msg: FirebaseAuth.instance.currentUser!.uid);
                       },

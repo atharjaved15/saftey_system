@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:saftey_system/homeScreen.dart';
 
 class signUp extends StatelessWidget {
@@ -46,16 +47,24 @@ class signUp extends StatelessWidget {
     else
       Fluttertoast.showToast(msg: 'User is not Registered Successfully');
   }
+
   saveData() async {
-    var  _firebaseFirestore = FirebaseFirestore.instance;
-    await _firebaseFirestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid.toString()).set(
-        {
-          'UserID' : FirebaseAuth.instance.currentUser!.uid,
-          'UserEmail ' : FirebaseAuth.instance.currentUser!.email,
-          'E_Number1' : p_No_1,
-          'E_Number2' : p_No_2,
-        }
-    );
+    late String lat,long;
+    Geolocator.getCurrentPosition(desiredAccuracy:  LocationAccuracy.best).then((value) async =>
+    {
+      lat = value.latitude.toString(),
+      long = value.longitude.toString(),
+      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid.toString()).set({
+        'lat' : lat.toString(),
+        'long' : long.toString(),
+        'UserID' : FirebaseAuth.instance.currentUser!.uid,
+        'UserEmail ' : FirebaseAuth.instance.currentUser!.email,
+        'E_Number1' : p_No_1,
+        'E_Number2' : p_No_2,
+      }),
+    });
+
+
   }
 
   @override
@@ -88,7 +97,7 @@ class signUp extends StatelessWidget {
                     TextField(
                       decoration: InputDecoration(
                         fillColor: Colors.grey[100],
-                        hintText: 'UserName',
+                        hintText: 'Email',
                         hoverColor: Colors.purple[800],
                         prefixIcon: Icon(Icons.admin_panel_settings_outlined),
 
