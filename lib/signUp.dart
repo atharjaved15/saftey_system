@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:saftey_system/homeScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class signUp extends StatelessWidget {
   TextEditingController emailController = new TextEditingController();
@@ -25,6 +26,8 @@ class signUp extends StatelessWidget {
       try{
         UserCredential user = await _auth.createUserWithEmailAndPassword(email: email, password: pass);
         toast(user);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('email', email);
         return user;
       }
       catch(e){

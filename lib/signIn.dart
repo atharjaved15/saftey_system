@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:saftey_system/signUp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'homeScreen.dart';
 
@@ -17,6 +18,8 @@ class signIn extends StatelessWidget {
   Future<void> login () async{
     try{
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', email);
     }
     catch(error){
       Fluttertoast.showToast(msg: error.toString(), timeInSecForIosWeb: 3,

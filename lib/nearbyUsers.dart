@@ -5,8 +5,10 @@ import 'dart:math' show cos, sqrt, asin;
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:saftey_system/signIn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'aboutUS.dart';
+import 'emergencyAlerts.dart';
 import 'emergencyNumbers.dart';
 
 class nearbyUsers extends StatefulWidget {
@@ -65,6 +67,18 @@ class _nearbyUsersState extends State<nearbyUsers> {
               ListTile(
                 title: Row(
                   children: [
+                    Icon(Icons.add_alert),
+                    SizedBox(width: 40,),
+                    Text('Emergency Alerts'),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => emergencyAlerts()));
+                },
+              ),
+              ListTile(
+                title: Row(
+                  children: [
                     Icon(Icons.change_circle_outlined),
                     SizedBox(width: 40,),
                     Text('Update Emergency Numbers'),
@@ -85,10 +99,13 @@ class _nearbyUsersState extends State<nearbyUsers> {
                 onTap: () async{
                   await FirebaseAuth.instance.signOut().whenComplete(() =>
                   {
+
                     Navigator.push(context, MaterialPageRoute(builder: (context) => signIn())).whenComplete(() => {
                       Fluttertoast.showToast(msg: "You have been Logged Out Successfully!"),
                     }),
                   });
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.remove('email');
                 },
               ),
             ],

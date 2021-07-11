@@ -28,7 +28,7 @@ class getStarted extends StatelessWidget {
                           child:Text('COMSATS UNIVERSITY ISLAMABAD' , style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold , color: Colors.purple[800]), ),
                         ),
                         Center(
-                          child:Text('Self Safety System' , style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic , color: Colors.black), ),
+                          child:Text('Smart Protecttion App' , style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic , color: Colors.black), ),
                         ),
                       ],
                     ),

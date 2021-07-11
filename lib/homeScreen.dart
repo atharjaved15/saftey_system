@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:saftey_system/emergencyAlerts.dart';
 import 'package:saftey_system/nearbyUsers.dart';
 import 'package:saftey_system/signIn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'aboutUS.dart';
 import 'emergencyNumbers.dart';
@@ -84,9 +88,32 @@ class homeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                     MaterialButton(
-                      onPressed: (){
+                      onPressed: ()async{
                         getLocation();
                         _sendSMS('Help me I am in Trouble at location: $lat , $long ', [phoneNumber1,phoneNumber2]);
+                        await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid.toString()).update({
+                          'status' : 'Emergency'
+                        });
+                       /* Directory directory = await getApplicationDocumentsDirectory();
+                        String _filepath = directory.path + '/' + DateTime.now().millisecondsSinceEpoch.toString() + '.aac';
+                        var _audioRecorder = FlutterAudioRecorder(_filepath , audioFormat:  AudioFormat.AAC);
+                        await _audioRecorder.initialized;
+                        var filepath = _filepath;
+                        _audioRecorder.start().whenComplete(() => Fluttertoast.showToast(msg: 'Audio Recording started for 30 Seconds')).timeout(Duration(seconds: 30)).whenComplete(() => {
+                          _audioRecorder.stop().whenComplete(() =>
+                          {
+                            Fluttertoast.showToast(msg: 'Audio Recorder for 30 Seconds'),
+                          })
+                        });
+                        FirebaseStorage firebasestorage = FirebaseStorage.instance;
+                        try{
+                          await firebasestorage.ref('recorded-voices').child(
+                            filepath.substring(filepath.indexOf('/'), filepath.length)
+                          ).putFile(File(filepath)).whenComplete(() => Fluttertoast.showToast(msg: 'File Uploaded'));
+                        }
+                        catch (error) {
+                          Fluttertoast.showToast(msg: error.toString());
+                        }*/
                       },
                       color: Colors.red,
                       minWidth: MediaQuery.of(context).size.width * 0.3,
@@ -98,9 +125,11 @@ class homeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.005,),
                     MaterialButton(
-                      onPressed: (){
+                      onPressed: ()async{
                         getLocation();
-                        _sendSMS('Help me I am in Trouble at location: $lat , $long ', [phoneNumber1,phoneNumber2]);
+                        await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid.toString()).update({
+                          'status' : 'Safe'
+                        }).whenComplete(() => Fluttertoast.showToast(msg: 'Status Updated !! '));
                       },
                       color: Colors.green,
                       minWidth: MediaQuery.of(context).size.width * 0.3,
@@ -157,6 +186,18 @@ class homeScreen extends StatelessWidget {
               ListTile(
                 title: Row(
                   children: [
+                    Icon(Icons.add_alert),
+                    SizedBox(width: 40,),
+                    Text('Emergency Alerts'),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => emergencyAlerts()));
+                },
+              ),
+              ListTile(
+                title: Row(
+                  children: [
                     Icon(Icons.change_circle_outlined),
                     SizedBox(width: 40,),
                     Text('Update Emergency Numbers'),
@@ -177,10 +218,13 @@ class homeScreen extends StatelessWidget {
                 onTap: () async{
                   await FirebaseAuth.instance.signOut().whenComplete(() =>
                   {
+
                     Navigator.push(context, MaterialPageRoute(builder: (context) => signIn())).whenComplete(() => {
                       Fluttertoast.showToast(msg: "You have been Logged Out Successfully!"),
                     }),
                   });
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.remove('email');
                 },
               ),
             ],
