@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:saftey_system/emergencyAlerts.dart';
 import 'package:saftey_system/nearbyUsers.dart';
 import 'package:saftey_system/signIn.dart';
@@ -20,6 +21,7 @@ class homeScreen extends StatelessWidget {
    required this.phoneNumber1,
    required this.phoneNumber2,
 });
+
   void getLocation() async {
      Geolocator.getCurrentPosition(desiredAccuracy:  LocationAccuracy.best).then((value) async =>
      {
@@ -30,6 +32,10 @@ class homeScreen extends StatelessWidget {
          'long' : long.toString(),
        }),
      });
+  }
+
+  void recordVideo(){
+    ImagePicker.platform.getVideo(source: ImageSource.camera);
   }
   void _sendSMS(String message, List<String> recipents) async {
     String _result = await sendSMS(message: message, recipients: recipents)
@@ -93,6 +99,8 @@ class homeScreen extends StatelessWidget {
                         _sendSMS('Help me I am in Trouble at location: $lat , $long ', [phoneNumber1,phoneNumber2]);
                         await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid.toString()).update({
                           'status' : 'Emergency'
+                        }).whenComplete(() => {
+                          recordVideo(),
                         });
                        /* Directory directory = await getApplicationDocumentsDirectory();
                         String _filepath = directory.path + '/' + DateTime.now().millisecondsSinceEpoch.toString() + '.aac';
